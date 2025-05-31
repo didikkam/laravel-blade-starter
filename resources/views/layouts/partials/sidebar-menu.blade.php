@@ -30,21 +30,21 @@
         </button>
         <div id="posts-submenu" class="{{ request()->routeIs('posts.*') ? '' : 'hidden' }} ml-8 space-y-1">
             {{-- @can('view posts') --}}
-                <a href="{{ route('posts.index') }}"
+                <a href="{{ route('admin.posts.index') }}"
                     class="nav-item {{ request()->routeIs('posts.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                     All Posts
                 </a>
             {{-- @endcan --}}
 
             {{-- @can('create posts') --}}
-                <a href="{{ route('posts.create') }}"
+                <a href="{{ route('admin.posts.create') }}"
                     class="nav-item {{ request()->routeIs('posts.create') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                     Create Post
                 </a>
             {{-- @endcan --}}
 
             {{-- @can('view posts') --}}
-                <a href="{{ route('posts.categories') ?? '#' }}"
+                <a href="{{ route('admin.posts.categories') ?? '#' }}"
                     class="nav-item {{ request()->routeIs('posts.categories') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                     Categories
                 </a>
@@ -74,14 +74,14 @@
         <div id="users-submenu"
             class="{{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? '' : 'hidden' }} ml-8 space-y-1">
             {{-- @can('view users') --}}
-                <a href="{{ route('users.index') }}"
+                <a href="{{ route('admin.users.index') }}"
                     class="nav-item {{ request()->routeIs('users.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                     All Users
                 </a>
             {{-- @endcan --}}
 
             {{-- @can('manage roles') --}}
-                <a href="{{ route('roles.index') ?? '#' }}"
+                <a href="{{ route('admin.roles.index') ?? '#' }}"
                     class="nav-item {{ request()->routeIs('roles.*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                     Roles & Permissions
                 </a>
@@ -109,15 +109,15 @@
             </svg>
         </button>
         <div id="reports-submenu" class="{{ request()->routeIs('reports.*') ? '' : 'hidden' }} ml-8 space-y-1">
-            <a href="{{ route('reports.analytics') ?? '#' }}"
+            <a href="{{ route('admin.reports.analytics') ?? '#' }}"
                 class="nav-item {{ request()->routeIs('reports.analytics') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                 Analytics
             </a>
-            <a href="{{ route('reports.users') ?? '#' }}"
+            <a href="{{ route('admin.reports.users') ?? '#' }}"
                 class="nav-item {{ request()->routeIs('reports.users') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                 User Reports
             </a>
-            <a href="{{ route('reports.activity') ?? '#' }}"
+            <a href="{{ route('admin.reports.activity') ?? '#' }}"
                 class="nav-item {{ request()->routeIs('reports.activity') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm rounded-lg transition-colors">
                 Activity Logs
             </a>
@@ -127,7 +127,7 @@
 
 <!-- Media Library -->
 {{-- @can('manage media') --}}
-    <a href="{{ route('media.index') ?? '#' }}"
+    <a href="{{ route('admin.media.index') ?? '#' }}"
         class="nav-item {{ request()->routeIs('media.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors">
         <svg class="{{ request()->routeIs('media.*') ? 'text-blue-500' : 'text-gray-500' }} mr-3 h-5 w-5" fill="none"
             stroke="currentColor" viewBox="0 0 24 24">
@@ -144,7 +144,7 @@
 
 <!-- Settings -->
 {{-- @can('manage settings') --}}
-    <a href="{{ route('settings.index') ?? '#' }}"
+    <a href="{{ route('admin.settings.index') ?? '#' }}"
         class="nav-item {{ request()->routeIs('settings.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors">
         <svg class="{{ request()->routeIs('settings.*') ? 'text-blue-500' : 'text-gray-500' }} mr-3 h-5 w-5"
             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +159,7 @@
 {{-- @endcan --}}
 
 <!-- Help & Support -->
-<a href="{{ route('help.index') ?? '#' }}"
+<a href="{{ route('admin.help.index') ?? '#' }}"
     class="nav-item {{ request()->routeIs('help.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors">
     <svg class="{{ request()->routeIs('help.*') ? 'text-blue-500' : 'text-gray-500' }} mr-3 h-5 w-5" fill="none"
         stroke="currentColor" viewBox="0 0 24 24">

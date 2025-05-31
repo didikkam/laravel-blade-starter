@@ -37,7 +37,7 @@
             <!-- Quick Add Dropdown -->
             <div id="quick-add-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                 @can('create posts')
-                    <a href="{{ route('posts.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <a href="{{ route('admin.posts.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <div class="flex items-center">
                             <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -110,7 +110,7 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ route('posts.index') }}" class="font-medium text-blue-700 hover:text-blue-900">View all</a>
+                    <a href="{{ route('admin.posts.index') }}" class="font-medium text-blue-700 hover:text-blue-900">View all</a>
                 </div>
             </div>
         </div>
@@ -148,7 +148,7 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ route('users.index') }}" class="font-medium text-blue-700 hover:text-blue-900">View
+                    <a href="{{ route('admin.users.index') }}" class="font-medium text-blue-700 hover:text-blue-900">View
                         all</a>
                 </div>
             </div>
@@ -190,7 +190,7 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ route('reports.analytics') ?? '#' }}"
+                    <a href="{{ route('admin.reports.analytics') ?? '#' }}"
                         class="font-medium text-blue-700 hover:text-blue-900">View report</a>
                 </div>
             </div>
@@ -242,7 +242,7 @@
             <div class="px-4 py-5 sm:p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Activity</h3>
-                    <a href="{{ route('activity.index') ?? '#' }}"
+                    <a href="{{ route('admin.activity.index') ?? '#' }}"
                         class="text-sm font-medium text-blue-600 hover:text-blue-500">View all</a>
                 </div>
                 <div class="space-y-4">
@@ -339,7 +339,7 @@
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Latest Posts</h3>
-                <a href="{{ route('posts.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">View
+                <a href="{{ route('admin.posts.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">View
                     all posts</a>
             </div>
 
@@ -392,7 +392,7 @@
                                     {{ $post['created_at'] }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="{{ route('posts.show', $post['id']) }}"
+                                    <a href="{{ route('admin.posts.show', $post['id']) }}"
                                         class="text-blue-600 hover:text-blue-900">View</a>
                                 </td>
                             </tr>
