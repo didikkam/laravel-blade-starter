@@ -20,16 +20,21 @@
 </head>
 
 <body class="h-full font-sans antialiased">
-    <div class="min-h-full">
+    <div class="min-h-full flex">
         <!-- Sidebar -->
         <div id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
-                <div class="flex items-center justify-center h-16 px-4 bg-white border-b border-gray-200">
+                <div class="flex items-center justify-center h-16 bg-blue-600 border-b border-blue-700">
                     <a href="{{ route('landing') }}" class="flex items-center space-x-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto">
-                        <span class="text-xl font-bold text-gray-900">{{ config('app.name', 'Laravel') }}</span>
+                        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-white">{{ config('app.name', 'Laravel') }}</span>
                     </a>
                 </div>
 
@@ -41,7 +46,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="lg:pl-64 flex flex-col flex-1">
+        <div class="flex-1 flex flex-col min-w-0">
             @include('layouts.partials.header')
 
             <!-- Breadcrumb -->
