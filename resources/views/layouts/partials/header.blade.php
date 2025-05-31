@@ -33,11 +33,7 @@
                 <div class="relative">
                     <button onclick="toggleNotifications()"
                         class="p-2 text-gray-400 hover:text-gray-500 rounded-full relative">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 17h5l-3-3M15 17l-3-3M15 17v-7a6 6 0 00-6-6v0a6 6 0 00-6 6v7l-3 3h5m9 0v1a3 3 0 11-6 0v-1m6 0H9">
-                            </path>
-                        </svg>
+                        <img src="{{ asset('assets/icons/notification.svg') }}" class="h-6 w-6" alt="Notification">
                         <!-- Notification badge -->
                         <span
                             class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white"></span>
@@ -66,8 +62,8 @@
                 </div>
 
                 <!-- User dropdown -->
-                <div class="relative">
-                    <button onclick="toggleUserMenu()"
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open"
                         class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <img class="h-8 w-8 rounded-full"
                             src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=3b82f6&color=fff' }}"
@@ -75,15 +71,18 @@
                         <span class="ml-3 text-gray-700 text-sm font-medium hidden md:block">
                             {{ auth()->user()->name ?? 'User' }}
                         </span>
-                        <svg class="ml-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <img src="{{ asset('assets/icons/chevron-down.svg') }}" class="ml-2 h-4 w-4" alt="Toggle menu">
                     </button>
 
-                    <div id="user-menu"
-                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                    <div x-show="open" 
+                         @click.away="open = false"
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                         <a href="{{ route('profile.show') ?? '#' }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex items-center">
