@@ -115,7 +115,11 @@ class Controller extends BaseController
                 return back()->with(ResponseException::STATUS_ERROR, $message);
 
             default:
-                $message = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.';
+                if(env('APP_DEBUG') == 'true') {
+                    $message = $exception->getMessage() ?? 'Terjadi kesalahan teknis pada server. Silakan coba lagi nanti.';
+                } else {
+                    $message = 'Terjadi kesalahan pada sistem. Silakan coba lagi nanti.';
+                }
                 
                 if (request()->wantsJson()) {
                     return response()->json([
