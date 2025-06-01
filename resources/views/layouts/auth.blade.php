@@ -11,64 +11,12 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.8s ease-out',
-                        'slide-in': 'slideIn 0.6s ease-out',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite alternate',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': {
-                                opacity: '0',
-                                transform: 'translateY(20px)'
-                            },
-                            '100%': {
-                                opacity: '1',
-                                transform: 'translateY(0)'
-                            },
-                        },
-                        slideIn: {
-                            '0%': {
-                                opacity: '0',
-                                transform: 'translateX(-30px)'
-                            },
-                            '100%': {
-                                opacity: '1',
-                                transform: 'translateX(0)'
-                            },
-                        },
-                        float: {
-                            '0%, 100%': {
-                                transform: 'translateY(0px)'
-                            },
-                            '50%': {
-                                transform: 'translateY(-20px)'
-                            }
-                        },
-                        pulseGlow: {
-                            '0%': {
-                                boxShadow: '0 0 5px rgba(59, 130, 246, 0.5)'
-                            },
-                            '100%': {
-                                boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)'
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
 </head>
@@ -220,6 +168,22 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/ajax-core.js') }}"></script>
+    
+    <!-- Global Scripts -->
+    <script>
+        // Add smooth focus effects to all inputs
+        $(document).ready(function() {
+            $('input:not([type="hidden"]), textarea, select').on('focus', function() {
+                $(this).addClass('transform scale-[1.01]');
+            }).on('blur', function() {
+                $(this).removeClass('transform scale-[1.01]');
+            });
+        });
+    </script>
+
+    <!-- Additional Scripts -->
     @stack('scripts')
 </body>
 

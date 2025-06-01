@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Exceptions\ResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -16,32 +16,54 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            return response()->json([
-                'message' => 'Login successful'
+        sleep(1);
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
             ]);
-        }
 
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
+            if (Auth::attempt($credentials, $request->boolean('remember'))) {
+                $request->session()->regenerate();
+
+                $user = Auth::user();
+                return $this->getSuccessResponse(
+                    'Login berhasil',
+                    [
+                        'user' => [
+                            'name' => $user->name,
+                            'email' => $user->email,
+                        ]
+                    ],
+                    route('admin.dashboard')
+                );
+            }
+
+            throw new ResponseException(
+                'Email atau password salah',
+                ResponseException::HTTP_UNAUTHORIZED
+            );
+        } catch (\Exception $e) {
+            return $this->getExceptionResponse($e, 'Login Error');
+        }
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
+        try {
+            Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-        
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+            
+            $request->session()->regenerateToken();
 
-        return redirect('/');
+            return $this->getSuccessResponse(
+                'Logout berhasil',
+                null,
+                route('admin.dashboard')
+            );
+        } catch (\Exception $e) {
+            return $this->getExceptionResponse($e, 'Logout Error');
+        }
     }
 }

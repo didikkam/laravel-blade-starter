@@ -76,8 +76,9 @@
         </div>
     </div>
 
-    <!-- Additional Scripts -->
-    @stack('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/ajax-core.js') }}"></script>
 
     <script>
         // Toggle sidebar for mobile
@@ -120,6 +121,10 @@
             }
         });
     </script>
+    
+    <!-- Additional Scripts -->
+    @stack('scripts')
+
 </body>
 
 </html>
