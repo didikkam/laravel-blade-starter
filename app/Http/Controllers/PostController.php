@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Yajra\DataTables\Facades\DataTables;
 
 class PostController extends Controller
 {
@@ -12,6 +13,23 @@ class PostController extends Controller
      */
     public function index()
     {
+        if (request()->ajax()) {
+            $posts = Post::with('user')->select('posts.*');
+            
+            return DataTables::of($posts)
+                ->addColumn('author', function ($post) {
+                    return $post->user->name;
+                })
+                ->addColumn('action', function ($post) {
+                    return view('admin.posts.partials.action-buttons', compact('post'));
+                })
+                ->editColumn('published_at', function ($post) {
+                    return $post->published_at ? $post->published_at->format('d M Y H:i') : '-';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
         return view('admin.posts.index');
     }
 
@@ -20,7 +38,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        return view('admin.posts.create');
     }
 
     /**
@@ -28,7 +46,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Implement store logic
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'published_at' => 'nullable|date'
+        ]);
+
+        $validated['user_id'] = auth()->id();
+        
+        Post::create($validated);
+
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'Post created successfully.');
     }
 
     /**
@@ -36,7 +65,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('posts.show', compact('post'));
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -44,7 +73,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -52,7 +81,16 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        // TODO: Implement update logic
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'published_at' => 'nullable|date'
+        ]);
+        
+        $post->update($validated);
+
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'Post updated successfully.');
     }
 
     /**
@@ -60,6 +98,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        // TODO: Implement delete logic
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'Post deleted successfully.');
     }
 } 

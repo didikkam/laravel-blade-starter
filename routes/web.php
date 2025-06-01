@@ -26,15 +26,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/show', [RegisterController::class, 'index'])->name('profile.show');
 
     // Admin Panel Routes
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
         // Dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // Content Management
         Route::prefix('posts')->name('posts.')->group(function () {
+            Route::get('/categories', [PostController::class, 'categories'])->name('categories');
             Route::get('/', [PostController::class, 'index'])->name('index');
-            Route::get('/create', [PostController::class, 'index'])->name('create');
-            Route::get('/categories', [PostController::class, 'index'])->name('categories');
+            Route::get('/create', [PostController::class, 'create'])->name('create');
+            Route::post('/', [PostController::class, 'store'])->name('store');
+            Route::get('/{post}', [PostController::class, 'show'])->name('show');
+            Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
+            Route::put('/{post}', [PostController::class, 'update'])->name('update');
+            Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
         });
 
         // Media Management
