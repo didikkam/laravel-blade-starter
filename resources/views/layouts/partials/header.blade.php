@@ -24,11 +24,6 @@
                     @yield('header-search')
                 @endif
 
-                <!-- Additional Header Actions -->
-                @hasSection('header-actions')
-                    @yield('header-actions')
-                @endif
-
                 <!-- Notifications -->
                 <div class="relative">
                     <button onclick="toggleNotifications()"

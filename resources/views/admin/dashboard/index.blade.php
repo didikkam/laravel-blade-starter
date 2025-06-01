@@ -20,60 +20,6 @@
     </nav>
 @endsection
 
-@section('header-actions')
-    <!-- Quick Actions -->
-    <div class="flex items-center space-x-3">
-        <!-- Quick Add Button -->
-        <div class="relative">
-            <button onclick="toggleQuickAdd()"
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                    </path>
-                </svg>
-                Quick Add
-            </button>
-
-            <!-- Quick Add Dropdown -->
-            <div id="quick-add-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                @can('create posts')
-                    <a href="{{ route('admin.posts.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 0a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"></path>
-                            </svg>
-                            New Post
-                        </div>
-                    </a>
-                @endcan
-
-                @can('create users')
-                    <a href="{{ route('users.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7Z"></path>
-                            </svg>
-                            New User
-                        </div>
-                    </a>
-                @endcan
-            </div>
-        </div>
-
-        <!-- Refresh Button -->
-        <button onclick="refreshDashboard()"
-            class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                </path>
-            </svg>
-        </button>
-    </div>
-@endsection
-
 @section('content')
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
