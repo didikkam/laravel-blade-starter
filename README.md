@@ -59,6 +59,36 @@ git clone https://github.com/yourusername/laravel-blade-starter.git
 cd laravel-blade-starter
 ```
 
+## Docker Setup
+
+Requirements:
+- Docker Engine
+- MySQL (on host)
+- Nginx (on host)
+
+```bash
+# Setup environment
+cp .env.example .env
+
+# Update .env database connection
+DB_HOST=host.docker.internal
+
+# Start container
+docker-compose up -d
+
+# Run migrations
+docker-compose exec app php artisan migrate
+
+# Setup Nginx (adjust the path in nginx-host.conf first)
+sudo cp nginx-host.conf /etc/nginx/sites-available/laravel-starter.test
+sudo ln -s /etc/nginx/sites-available/laravel-starter.test /etc/nginx/sites-enabled/
+sudo service nginx restart
+```
+
+Visit `http://localhost:8000`
+
+## Traditional Setup
+
 2. Install PHP dependencies
 ```bash
 composer install
