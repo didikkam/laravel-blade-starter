@@ -102,30 +102,29 @@
                             searchable: false,
                             render: function(data, type, row) {
                                 let actions = '<div class="flex space-x-2">';
-
                                 @can('admin.roles.show')
                                     const showUrl = "{{ route('admin.roles.show', ':id') }}"
                                         .replace(':id', row.id);
                                     actions += `
-                            <a href="${showUrl}" class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
-                            </a>`;
+                                        <a href="${showUrl}" class="text-blue-600 hover:text-blue-800" title="View Role">
+                                            <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
+                                        </a>`;
                                 @endcan
 
                                 @can('admin.roles.edit')
                                     const editUrl = "{{ route('admin.roles.edit', ':id') }}"
                                         .replace(':id', row.id);
                                     actions += `
-                            <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800">
-                                <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
-                            </a>`;
+                                        <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800" title="Edit Role">
+                                            <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
+                                        </a>`;
                                 @endcan
 
                                 @can('admin.roles.destroy')
                                     actions += `
-                            <button onclick="deleteRole(${row.id})" class="text-red-600 hover:text-red-800">
-                                <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
-                            </button>`;
+                                        <button onclick="deleteRole(${row.id})" class="text-red-600 hover:text-red-800" title="Delete Role">
+                                            <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
+                                        </button>`;
                                 @endcan
 
                                 actions += '</div>';

@@ -109,30 +109,29 @@
                             searchable: false,
                             render: function(data, type, row) {
                                 let actions = '<div class="flex space-x-2">';
-
                                 @can('admin.posts.show')
                                     const showUrl = "{{ route('admin.posts.show', ':id') }}"
                                         .replace(':id', row.id);
                                     actions += `
-                                <a href="${showUrl}" class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
-                                </a>`;
+                                        <a href="${showUrl}" class="text-blue-600 hover:text-blue-800" title="View Post">
+                                            <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
+                                        </a>`;
                                 @endcan
 
                                 @can('admin.posts.edit')
                                     const editUrl = "{{ route('admin.posts.edit', ':id') }}"
                                         .replace(':id', row.id);
                                     actions += `
-                                <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800">
-                                    <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
-                                </a>`;
+                                        <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800" title="Edit Post">
+                                            <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
+                                        </a>`;
                                 @endcan
 
                                 @can('admin.posts.destroy')
                                     actions += `
-                                <button onclick="deletePost(${row.id})" class="text-red-600 hover:text-red-800">
-                                    <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
-                                </button>`;
+                                        <button onclick="deletePost(${row.id})" class="text-red-600 hover:text-red-800" title="Delete Post">
+                                            <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
+                                        </button>`;
                                 @endcan
 
                                 actions += '</div>';

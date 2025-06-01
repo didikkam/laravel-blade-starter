@@ -117,30 +117,29 @@
                             searchable: false,
                             render: function(data, type, row) {
                                 let actions = '<div class="flex space-x-2">';
-
                                 @can('admin.users.show')
                                     const showUrl = "{{ route('admin.users.show', ':id') }}"
                                         .replace(':id', row.id);
                                     actions += `
-                            <a href="${showUrl}" class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
-                            </a>`;
+                                        <a href="${showUrl}" class="text-blue-600 hover:text-blue-800" title="View User">
+                                            <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
+                                        </a>`;
                                 @endcan
 
                                 @can('admin.users.edit')
                                     const editUrl = "{{ route('admin.users.edit', ':id') }}"
                                         .replace(':id', row.id);
                                     actions += `
-                            <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800">
-                                <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
-                            </a>`;
+                                        <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800" title="Edit User">
+                                            <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
+                                        </a>`;
                                 @endcan
 
                                 @can('admin.users.destroy')
                                     actions += `
-                            <button onclick="deleteUser(${row.id})" class="text-red-600 hover:text-red-800">
-                                <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
-                            </button>`;
+                                        <button onclick="deleteUser(${row.id})" class="text-red-600 hover:text-red-800" title="Delete User">
+                                            <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
+                                        </button>`;
                                 @endcan
 
                                 actions += '</div>';
