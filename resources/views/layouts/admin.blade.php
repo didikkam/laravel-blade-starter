@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Navigation -->
-                <nav class="flex-1 px-4 py-4 space-y-3 overflow-y-auto">
+                <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
                     @include('layouts.partials.sidebar-menu')
                 </nav>
             </div>

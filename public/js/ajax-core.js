@@ -17,13 +17,13 @@ const Toast = Swal.mixin({
 });
 
 const showResponse = {
-    show: function(response) {
+    show: function (response) {
         redirect = response.redirect_url || null;
         const icon = response.status || 'error';
         let defaultMessage;
-        
+
         // Set default message berdasarkan status
-        switch(icon) {
+        switch (icon) {
             case 'success':
                 defaultMessage = 'Data has been saved successfully.';
                 break;
@@ -39,9 +39,9 @@ const showResponse = {
             default:
                 defaultMessage = 'The given data was invalid.';
         }
-        
+
         const message = response.message || defaultMessage;
-        
+
         if (response.errors) {
             Swal.fire({
                 icon: icon,
@@ -53,7 +53,7 @@ const showResponse = {
             Object.keys(response.errors).forEach(field => {
                 const errorContainer = $(`.${field}-error.invalid-feedback`);
                 if (errorContainer.length) {
-                    const errorMessages = response.errors[field].map(error => 
+                    const errorMessages = response.errors[field].map(error =>
                         `<li class="ml-4">${error}</li>`
                     ).join('');
                     errorContainer.html(`<ul class="text-sm space-y-1">${errorMessages}</ul>`);
@@ -75,17 +75,21 @@ const showResponse = {
     }
 };
 
+// Global AJAX Setup
+$(document).ajaxSend(function () {
+    // Clear any previous field errors
+    $('.invalid-feedback').empty();
+});
+
 // Global AJAX Error Handler
-$(document).ajaxError(function(event, xhr, settings) {
+$(document).ajaxError(function (event, xhr) {
     const response = xhr.responseJSON || {};
-    
+
     if (xhr.status === 422) {
         // Validation errors
         response.status = 'error';
-        // Clear any previous field errors
-        $('.invalid-feedback').empty();
         showResponse.show(response);
-        
+
     } else if (xhr.status === 419) {
         showResponse.show({
             status: 'error',

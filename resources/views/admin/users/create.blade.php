@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Create Post')
+@section('title', 'Create User')
 
 @section('breadcrumb')
     <nav class="flex justify-between items-center" aria-label="Breadcrumb">
@@ -15,18 +15,18 @@
             <li>
                 <div class="flex items-center">
                     <i class="fas fa-chevron-right text-base text-gray-400 mx-2 align-middle"></i>
-                    <a href="{{ route('admin.posts.index') }}"
-                        class="text-sm font-medium text-gray-700 hover:text-blue-600 ml-2">Posts</a>
+                    <a href="{{ route('admin.users.index') }}"
+                        class="text-sm font-medium text-gray-700 hover:text-blue-600 ml-2">Users</a>
                 </div>
             </li>
             <li aria-current="page">
                 <div class="flex items-center">
                     <i class="fas fa-chevron-right text-base text-gray-400 mx-2 align-middle"></i>
-                    <span class="text-sm font-medium text-gray-500 ml-2">Create Post</span>
+                    <span class="text-sm font-medium text-gray-500 ml-2">Create</span>
                 </div>
             </li>
         </ol>
-        <a href="{{ route('admin.posts.index') }}"
+        <a href="{{ route('admin.users.index') }}"
             class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-blue-600">
             <i class="fas fa-arrow-left text-base align-middle mr-2"></i>
             Back
@@ -36,49 +36,51 @@
 
 @section('content')
     <div class="p-6 bg-white rounded-lg shadow">
-        <h2 class="text-2xl font-bold mb-4">Create New Post</h2>
-        <p class="text-gray-600 mb-6">Fill in the details to create a new post</p>
+        <h2 class="text-2xl font-bold mb-4">Create New User</h2>
+        <p class="text-gray-600 mb-6">Fill in the details to create a new user</p>
 
-        <!-- Post Creation Form -->
-        <form id="createPostForm" class="space-y-6">
+        <form id="createUserForm" class="space-y-6">
             @csrf
 
             <div>
-                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-                    Title
-                </label>
-                <input type="text" id="title" name="title"
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                <input type="text" name="name" id="name"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter post title">
-                <p class="mt-1 text-sm text-red-600 title-error invalid-feedback pl-1"></p>
+                    placeholder="Enter user name">
+                <p class="mt-1 text-sm text-red-600 name-error invalid-feedback pl-1"></p>
             </div>
 
             <div>
-                <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
-                    Content
-                </label>
-                <textarea id="content" name="content" rows="6"
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" name="email" id="email"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter post content"></textarea>
-                <p class="mt-1 text-sm text-red-600 content-error invalid-feedback pl-1"></p>
+                    placeholder="Enter email address">
+                <p class="mt-1 text-sm text-red-600 email-error invalid-feedback pl-1"></p>
             </div>
 
             <div>
-                <label for="published_at" class="block text-sm font-medium text-gray-700 mb-2">
-                    Publication Date (Optional)
-                </label>
-                <input type="datetime-local" id="published_at" name="published_at"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                <p class="mt-1 text-sm text-red-600 published_at-error invalid-feedback pl-1"></p>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <input type="password" name="password" id="password"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Enter password">
+                <p class="mt-1 text-sm text-red-600 password-error invalid-feedback pl-1"></p>
             </div>
 
-            <!-- Submit Button -->
+            <div>
+                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm
+                    Password</label>
+                <input type="password" name="password_confirmation" id="password_confirmation"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Confirm password">
+                <p class="mt-1 text-sm text-red-600 password_confirmation-error invalid-feedback pl-1"></p>
+            </div>
+
             <button type="submit"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed">
                 <span class="flex items-center justify-center">
                     <img src="{{ asset('assets/icons/spinner.svg') }}" class="animate-spin -ml-1 mr-3 h-5 w-5 hidden"
                         id="loading-spinner" alt="Loading">
-                    <span id="button-text">Create Post</span>
+                    <span id="button-text">Create User</span>
                 </span>
             </button>
         </form>
@@ -88,7 +90,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#createPostForm').on('submit', function(e) {
+            $('#createUserForm').on('submit', function(e) {
                 e.preventDefault();
 
                 const button = $(this).find('button[type="submit"]');
@@ -96,7 +98,7 @@
                 const buttonText = $('#button-text');
 
                 $.ajax({
-                    url: '{{ route('admin.posts.store') }}',
+                    url: '{{ route('admin.users.store') }}',
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function() {
@@ -115,7 +117,7 @@
                     // Reset button state
                     button.prop('disabled', false);
                     spinner.addClass('hidden');
-                    buttonText.text('Create Post');
+                    buttonText.text('Create User');
                 });
             });
         });

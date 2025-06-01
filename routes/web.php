@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -32,7 +33,6 @@ Route::middleware('auth')->group(function () {
 
         // Content Management
         Route::prefix('posts')->name('posts.')->group(function () {
-            Route::get('/categories', [PostController::class, 'categories'])->name('categories');
             Route::get('/', [PostController::class, 'index'])->name('index');
             Route::get('/create', [PostController::class, 'create'])->name('create');
             Route::post('/', [PostController::class, 'store'])->name('store');
@@ -49,7 +49,13 @@ Route::middleware('auth')->group(function () {
 
         // User Management
         Route::prefix('users')->name('users.')->group(function () {
-            Route::get('/', [DashboardController::class, 'index'])->name('index');
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::get('/create', [UserController::class, 'create'])->name('create');
+            Route::post('/', [UserController::class, 'store'])->name('store');
+            Route::get('/{user}', [UserController::class, 'show'])->name('show');
+            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::put('/{user}', [UserController::class, 'update'])->name('update');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
         });
         Route::prefix('roles')->name('roles.')->group(function () {
             Route::get('/', [DashboardController::class, 'index'])->name('index');
