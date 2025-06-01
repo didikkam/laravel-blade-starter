@@ -43,7 +43,7 @@ class Controller extends BaseController
     protected function getExceptionResponse(\Exception $exception, $errorContext = 'Error')
     {
         $request = request();
-        
+
         Log::error("{$errorContext}: " . $exception->getMessage(), [
             'exception_class' => get_class($exception),
             'exception_message' => $exception->getMessage(),
@@ -103,8 +103,8 @@ class Controller extends BaseController
                 return back()->withErrors($exception->validator)->withInput();
 
             case $exception instanceof ModelNotFoundException:
-                $message = 'Data tidak ditemukan.';
-                
+                $message = $exception->getMessage() ?? 'Data not found.';
+
                 if (request()->wantsJson()) {
                     return response()->json([
                         'status' => ResponseException::STATUS_ERROR,
@@ -115,12 +115,12 @@ class Controller extends BaseController
                 return back()->with(ResponseException::STATUS_ERROR, $message);
 
             default:
-                if(env('APP_DEBUG') == 'true') {
-                    $message = $exception->getMessage() ?? 'Terjadi kesalahan teknis pada server. Silakan coba lagi nanti.';
+                if (env('APP_DEBUG') == 'true') {
+                    $message = $exception->getMessage() ?? 'A technical error occurred on the server. Please try again later.';
                 } else {
-                    $message = 'Terjadi kesalahan pada sistem. Silakan coba lagi nanti.';
+                    $message = 'A system error occurred. Please try again later.';
                 }
-                
+
                 if (request()->wantsJson()) {
                     return response()->json([
                         'status' => ResponseException::STATUS_ERROR,
