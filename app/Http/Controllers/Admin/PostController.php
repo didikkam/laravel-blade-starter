@@ -83,16 +83,23 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'published_at' => 'nullable|date'
-        ]);
-        
-        $post->update($validated);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|max:255',
+                'content' => 'required',
+                'published_at' => 'nullable|date'
+            ]);
+            
+            $post->update($validated);
 
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Post updated successfully.');
+            return $this->getSuccessResponse(
+                'Post updated successfully',
+                null,
+                route('admin.posts.index')
+            );
+        } catch (\Exception $e) {
+            return $this->getExceptionResponse($e, 'Post Update Error');
+        }
     }
 
     /**
