@@ -12,22 +12,32 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (request()->ajax()) {
-            $posts = Post::with('user')->select('posts.*');
-            
-            return DataTables::of($posts)
-                ->addColumn('author', function ($post) {
-                    return $post->user->name;
-                })
-                ->addColumn('action', function ($post) {
-                    return view('admin.posts.partials.action-buttons', compact('post'));
-                })
+        if ($request->ajax()) {
+            $query = Post::with('user')
+                ->select('posts.*', 'users.name as author_name')
+                ->join('users', 'posts.user_id', '=', 'users.id');
+
+            // Apply custom search
+            if ($request->has('search') && $request->search['value']) {
+                $search = $request->search['value'];
+                $query = $query->where(function ($query) use ($search) {
+                    $query->where('posts.title', 'LIKE', "%{$search}%")
+                        ->orWhere('posts.content', 'LIKE', "%{$search}%")
+                        ->orWhere('users.name', 'LIKE', "%{$search}%");
+                });
+                $request->merge(['search' => ['value' => '']]);
+            }
+
+            if (empty($request->order)) {
+                $query = $query->orderBy('posts.created_at', 'desc');
+            }
+
+            return DataTables::of($query)
                 ->editColumn('published_at', function ($post) {
                     return $post->published_at ? $post->published_at->format('d M Y H:i') : '-';
                 })
-                ->rawColumns(['action'])
                 ->make(true);
         }
 
@@ -49,7 +59,7 @@ class PostController extends Controller
             ]);
 
             $validated['user_id'] = auth()->id();
-            
+
             Post::create($validated);
 
             return $this->getSuccessResponse(
@@ -62,25 +72,16 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post)
     {
         return view('admin.posts.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Post $post)
     {
         return view('admin.posts.edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Post $post)
     {
         try {
@@ -89,7 +90,7 @@ class PostController extends Controller
                 'content' => 'required',
                 'published_at' => 'nullable|date'
             ]);
-            
+
             $post->update($validated);
 
             return $this->getSuccessResponse(
@@ -102,14 +103,16 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post)
     {
-        $post->delete();
+        try {
+            $post->delete();
 
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Post deleted successfully.');
+            return $this->getSuccessResponse(
+                'Post deleted successfully',
+            );
+        } catch (\Exception $e) {
+            return $this->getExceptionResponse($e, 'Post Deletion Error');
+        }
     }
-} 
+}

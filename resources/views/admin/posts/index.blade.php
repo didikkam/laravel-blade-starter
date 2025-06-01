@@ -2,6 +2,10 @@
 
 @section('title', 'Posts Management')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+@endpush
+
 @section('breadcrumb')
     <nav class="flex justify-between items-center" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
@@ -36,6 +40,7 @@
             <table id="posts-table" class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr>
+                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Published At</th>
@@ -48,25 +53,83 @@
 </div>
 @endsection
 
-@push('styles')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-@endpush
-
 @push('scripts')
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script>
+    let postsTable;
+    
     $(document).ready(function() {
-        $('#posts-table').DataTable({
+        postsTable = $('#posts-table').DataTable({
             processing: true,
             serverSide: true,
+            order: [],
             ajax: "{{ route('admin.posts.index') }}",
             columns: [
+                { 
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    className: 'px-2 py-2 whitespace-nowrap text-sm text-gray-900 text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
                 { data: 'title', name: 'title' },
-                { data: 'author', name: 'author' },
-                { data: 'published_at', name: 'published_at' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
+                { data: 'author_name', name: 'author_name' },
+                { 
+                    data: 'published_at', 
+                    name: 'published_at'
+                },
+                { 
+                    data: 'id', 
+                    name: 'action',
+                    orderable: false, 
+                    searchable: false,
+                    render: function(data, type, row) {
+                        const showUrl = "{{ route('admin.posts.show', ':id') }}".replace(':id', row.id);
+                        const editUrl = "{{ route('admin.posts.edit', ':id') }}".replace(':id', row.id);
+                        
+                        return `
+                            <div class="flex space-x-2">
+                                <a href="${showUrl}" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye w-5 h-5 text-base align-middle"></i>
+                                </a>
+                                <a href="${editUrl}" class="text-yellow-600 hover:text-yellow-800">
+                                    <i class="fas fa-edit w-5 h-5 text-base align-middle"></i>
+                                </a>
+                                <button onclick="deletePost(${row.id})" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt w-5 h-5 text-base align-middle"></i>
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
             ]
         });
     });
+
+    function deletePost(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/posts/${id}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        showResponse.show(response);
+                        postsTable.ajax.reload();
+                    }
+                });
+            }
+        });
+    }
 </script>
 @endpush 
