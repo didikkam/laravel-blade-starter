@@ -1,13 +1,33 @@
-@extends('layouts.dashboard')
+@extends('layouts.admin')
 
 @section('title', 'Posts Management')
+
+@section('breadcrumb')
+    <nav class="flex justify-between items-center" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-home text-base align-middle"></i>
+                    <span class="ml-2">Dashboard</span>
+                </a>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-base text-gray-400 mx-2 align-middle"></i>
+                    <span class="text-sm font-medium text-gray-500 ml-2">Posts</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+@endsection
 
 @section('content')
 <div class="bg-white rounded-lg shadow-sm">
     <div class="p-6">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-semibold text-gray-800">Posts List</h2>
-            <a href="{{ route('admin.posts.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <i class="fas fa-plus text-base align-middle mr-2"></i>
                 Create Post
             </a>
         </div>

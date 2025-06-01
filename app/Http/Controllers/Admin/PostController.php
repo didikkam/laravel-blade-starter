@@ -34,31 +34,32 @@ class PostController extends Controller
         return view('admin.posts.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'published_at' => 'nullable|date'
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|max:255',
+                'content' => 'required',
+                'published_at' => 'nullable|date'
+            ]);
 
-        $validated['user_id'] = auth()->id();
-        
-        Post::create($validated);
+            $validated['user_id'] = auth()->id();
+            
+            Post::create($validated);
 
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Post created successfully.');
+            return $this->getSuccessResponse(
+                'Post created successfully',
+                null,
+                route('admin.posts.index')
+            );
+        } catch (\Exception $e) {
+            return $this->getExceptionResponse($e, 'Post Creation Error');
+        }
     }
 
     /**
