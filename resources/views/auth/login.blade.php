@@ -14,7 +14,7 @@
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                 Email address
             </label>
-            <input type="text" id="email" name="email" value="{{ old('email') }}" autocomplete="email"
+            <input type="email" id="email" name="email" required value="{{ old('email') }}" autocomplete="email"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 @error('email') border-red-300 focus:ring-red-500 @enderror"
                 placeholder="Enter your email">
             <p class="mt-1 text-sm text-red-600 email-error invalid-feedback pl-1"></p>
@@ -26,7 +26,7 @@
                 Password
             </label>
             <div class="relative">
-                <input type="password" id="password" name="password" autocomplete="current-password"
+                <input type="password" id="password" required name="password" autocomplete="current-password"
                     class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 @error('password') border-red-300 focus:ring-red-500 @enderror"
                     placeholder="Enter your password">
                 <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 flex items-center pr-4">
