@@ -136,7 +136,7 @@
             </div>
             <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                    <a href="{{ route('admin.reports.analytics') ?? '#' }}"
+                    <a href="{{ route('admin.dashboard') ?? '#' }}"
                         class="font-medium text-blue-700 hover:text-blue-900">View report</a>
                 </div>
             </div>
@@ -188,7 +188,7 @@
             <div class="px-4 py-5 sm:p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Activity</h3>
-                    <a href="{{ route('admin.activity.index') ?? '#' }}"
+                    <a href="{{ route('admin.dashboard') ?? '#' }}"
                         class="text-sm font-medium text-blue-600 hover:text-blue-500">View all</a>
                 </div>
                 <div class="space-y-4">

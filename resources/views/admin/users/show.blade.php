@@ -65,6 +65,19 @@
                     <h3 class="text-sm font-medium text-gray-500">Last Updated</h3>
                     <p class="mt-1 text-sm text-gray-900">{{ $user->updated_at->format('d M Y H:i') }}</p>
                 </div>
+
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Roles</h3>
+                    <div class="mt-2 space-x-2">
+                        @forelse($roles as $role)
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {{ $role->name }}
+                            </span>
+                        @empty
+                            <span class="text-sm text-gray-500">No roles assigned</span>
+                        @endforelse
+                    </div>
+                </div>
             </div>
 
             <div class="space-y-4">

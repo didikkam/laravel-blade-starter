@@ -46,23 +46,6 @@ class RoleAndPermissionSeeder extends Seeder
             'admin.roles.show',
             'admin.roles.edit',
             'admin.roles.destroy',
-
-            // Media permissions
-            'admin.media.index',
-            
-            // Reports permissions
-            'admin.reports.analytics',
-            'admin.reports.users',
-            'admin.reports.activity',
-            
-            // Activity permissions
-            'admin.activity.index',
-            
-            // Settings permissions
-            'admin.settings.index',
-            
-            // Help permissions
-            'admin.help.index',
         ];
 
         foreach ($permissions as $permission) {

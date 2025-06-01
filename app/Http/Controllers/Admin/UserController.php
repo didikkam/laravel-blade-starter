@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
+use App\Exceptions\ResponseException;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,7 +19,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = User::query();
+            $query = User::with('roles');
 
             // Apply custom search
             if ($request->has('search') && $request->search['value']) {
@@ -36,6 +39,9 @@ class UserController extends Controller
                 ->editColumn('created_at', function ($user) {
                     return $user->created_at->format('d M Y H:i');
                 })
+                ->addColumn('roles', function ($user) {
+                    return $user->roles->pluck('name')->implode(', ');
+                })
                 ->make(true);
         }
 
@@ -47,7 +53,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -60,11 +67,13 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
+                'role' => 'required|exists:roles,name',
             ]);
 
             $validated['password'] = Hash::make($validated['password']);
 
-            User::create($validated);
+            $user = User::create($validated);
+            $user->assignRole($request->role);
 
             return $this->getSuccessResponse(
                 'User created successfully',
@@ -81,7 +90,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('admin.users.show', compact('user'));
+        $roles = $user->roles;
+        return view('admin.users.show', compact('user', 'roles'));
     }
 
     /**
@@ -89,7 +99,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $roles = Role::all();
+        $userRole = $user->roles->first();
+        return view('admin.users.edit', compact('user', 'roles', 'userRole'));
     }
 
     /**
@@ -102,6 +114,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:8|confirmed',
+                'role' => 'required|exists:roles,name',
             ]);
 
             if (isset($validated['password'])) {
@@ -111,6 +124,7 @@ class UserController extends Controller
             }
 
             $user->update($validated);
+            $user->syncRoles([$request->role]);
 
             return $this->getSuccessResponse(
                 'User updated successfully',
@@ -128,8 +142,18 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-            if ($user->id === auth()->id()) {
-                throw new \Exception("You cannot delete your own account.");
+            if ($user->getKey() === Auth::id()) {
+                throw new ResponseException(
+                    'You cannot delete your own account',
+                    ResponseException::HTTP_FORBIDDEN
+                );
+            }
+
+            if ($user->hasRole('Super Admin')) {
+                throw new ResponseException(
+                    'Cannot delete Super Admin user',
+                    ResponseException::HTTP_FORBIDDEN
+                );
             }
             
             $user->delete();

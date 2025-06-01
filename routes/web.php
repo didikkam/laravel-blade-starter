@@ -43,11 +43,6 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
         });
 
-        // Media Management
-        Route::prefix('media')->name('media.')->group(function () {
-            Route::get('/', [DashboardController::class, 'index'])->name('index');
-        });
-
         // User Management
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -68,26 +63,5 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy');
         });
 
-        // Reports
-        Route::prefix('reports')->name('reports.')->group(function () {
-            Route::get('/analytics', [DashboardController::class, 'index'])->name('analytics');
-            Route::get('/users', [DashboardController::class, 'index'])->name('users');
-            Route::get('/activity', [DashboardController::class, 'index'])->name('activity');
-        });
-
-        // Activity Logs
-        Route::prefix('activity')->name('activity.')->group(function () {
-            Route::get('/', [DashboardController::class, 'index'])->name('index');
-        });
-
-        // Settings
-        Route::prefix('settings')->name('settings.')->group(function () {
-            Route::get('/', [DashboardController::class, 'index'])->name('index');
-        });
-
-        // Help Center
-        Route::prefix('help')->name('help.')->group(function () {
-            Route::get('/', [DashboardController::class, 'index'])->name('index');
-        });
     });
 });
