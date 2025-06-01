@@ -1,7 +1,7 @@
 <!-- Dashboard -->
 <a href="{{ route('admin.dashboard') }}"
-    class="nav-item {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors">
-    <svg class="{{ request()->routeIs('dashboard') ? 'text-blue-500' : 'text-gray-500' }} mr-3 h-5 w-5" fill="none"
+    class="nav-item {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }} group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors">
+    <svg class="{{ request()->routeIs('admin.dashboard') ? 'text-blue-500' : 'text-gray-500' }} mr-3 h-5 w-5" fill="none"
         stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
