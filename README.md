@@ -2,6 +2,11 @@
 
 A modern Laravel starter template with authentication using Blade templating engine. Features a clean, responsive UI with Tailwind CSS.
 
+## Screenshot
+
+![Login Page](./public/assets/login.png)
+*Modern and responsive login interface with dark mode support*
+
 ## Features
 
 - 🔐 User Authentication (Login, Register, Password Reset)
