@@ -45,12 +45,14 @@
                         </span>
                     </div>
                 </div>
+                @canany(['admin.posts.edit'])
                 <div class="flex items-center gap-3">
                     <a href="{{ route('admin.posts.edit', $post) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <i class="fas fa-edit w-4 h-4 mr-2"></i>
                         Edit Post
                     </a>
                 </div>
+                @endcanany
             </div>
 
             <!-- Details List -->

@@ -24,6 +24,10 @@ class RoleController extends Controller
                 $request->merge(['search' => ['value' => '']]);
             }
 
+            if (empty($request->order)) {
+                $query = $query->orderBy('created_at', 'desc');
+            }
+            
             return DataTables::of($query)
                 ->addColumn('permissions', function ($role) {
                     return $role->permissions->pluck('name')->implode(', ');

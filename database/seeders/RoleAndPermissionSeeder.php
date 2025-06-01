@@ -15,12 +15,10 @@ class RoleAndPermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Truncate existing tables
+        // Truncate permissions related tables
         Schema::disableForeignKeyConstraints();
         DB::table('role_has_permissions')->truncate();
-        DB::table('model_has_roles')->truncate();
         DB::table('model_has_permissions')->truncate();
-        DB::table('roles')->truncate();
         DB::table('permissions')->truncate();
         Schema::enableForeignKeyConstraints();
 
@@ -52,14 +50,14 @@ class RoleAndPermissionSeeder extends Seeder
             Permission::create(['name' => $permission]);
         }
 
-        // Create roles and assign permissions
+        // Create or update roles and assign permissions
         // Super Admin gets all permissions
-        $role = Role::create(['name' => 'Super Admin']);
-        $role->givePermissionTo(Permission::all());
+        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
+        $superAdmin->syncPermissions(Permission::all());
 
         // Editor gets posts management and view users
-        $role = Role::create(['name' => 'Editor']);
-        $role->givePermissionTo([
+        $editor = Role::firstOrCreate(['name' => 'Editor']);
+        $editor->syncPermissions([
             'admin.posts.index',
             'admin.posts.create',
             'admin.posts.show',
@@ -70,8 +68,8 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         // Writer gets limited posts access
-        $role = Role::create(['name' => 'Writer']);
-        $role->givePermissionTo([
+        $writer = Role::firstOrCreate(['name' => 'Writer']);
+        $writer->syncPermissions([
             'admin.posts.index',
             'admin.posts.create',
             'admin.posts.show',
@@ -80,5 +78,5 @@ class RoleAndPermissionSeeder extends Seeder
 
         $this->command->info('Roles and Permissions seeded successfully!');
     }
-} 
+}
 // php artisan db:seed --class=RoleAndPermissionSeeder
