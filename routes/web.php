@@ -8,6 +8,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -23,8 +24,14 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
+    // Auth Routes
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::get('/profile/show', [RegisterController::class, 'index'])->name('profile.show');
+
+    // Profile Routes
+    Route::prefix('profile')->name('profile.')->group(function() {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
 
     // Admin Panel Routes
     Route::prefix('admin')->name('admin.')->group(function () {
