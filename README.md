@@ -72,18 +72,25 @@ cp .env.example .env
 
 # Update .env database connection
 DB_HOST=host.docker.internal
+DB_DATABASE=laravel_blade
+DB_USERNAME=laravel_user
+DB_PASSWORD=Secret123@
 
 # Configure MySQL to accept connections from Docker
 sudo sed -i 's/bind-address\s*=.*/bind-address = 0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf && sudo service mysql restart
 
-# Create MySQL user with remote access
-sudo mysql -e "CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+# Create database and user with specific privileges
+sudo mysql -e "CREATE DATABASE IF NOT EXISTS laravel_blade;
+CREATE USER IF NOT EXISTS 'laravel_user'@'%' IDENTIFIED BY 'Secret123@';
+GRANT ALL PRIVILEGES ON laravel_blade.* TO 'laravel_user'@'%';
+FLUSH PRIVILEGES;"
 
 # Start container
 docker-compose up -d
 docker-compose down && docker-compose up -d --build
 
-# Run migrations
+# Run
+docker-compose exec app php artisan key:generate
 docker-compose exec app php artisan migrate
 
 # Setup Nginx (adjust the path in nginx-host.conf first)
