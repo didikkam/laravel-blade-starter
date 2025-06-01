@@ -54,7 +54,7 @@ const showResponse = {
                 const errorContainer = $(`.${field}-error.invalid-feedback`);
                 if (errorContainer.length) {
                     const errorMessages = response.errors[field].map(error => 
-                        `<li class="list-disc ml-4">${error}</li>`
+                        `<li class="ml-4">${error}</li>`
                     ).join('');
                     errorContainer.html(`<ul class="text-sm space-y-1">${errorMessages}</ul>`);
                 }
