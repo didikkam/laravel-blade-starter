@@ -73,19 +73,26 @@ cp .env.example .env
 # Update .env database connection
 DB_HOST=host.docker.internal
 
+# Configure MySQL to accept connections from Docker
+sudo sed -i 's/bind-address\s*=.*/bind-address = 0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf && sudo service mysql restart
+
+# Create MySQL user with remote access
+sudo mysql -e "CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
 # Start container
 docker-compose up -d
+docker-compose down && docker-compose up -d --build
 
 # Run migrations
 docker-compose exec app php artisan migrate
 
 # Setup Nginx (adjust the path in nginx-host.conf first)
-sudo cp nginx-host.conf /etc/nginx/sites-available/laravel-starter.test
-sudo ln -s /etc/nginx/sites-available/laravel-starter.test /etc/nginx/sites-enabled/
+sudo cp nginx-host.conf /etc/nginx/sites-available/laravel-blade-starter.local
+sudo ln -s /etc/nginx/sites-available/laravel-blade-starter.local /etc/nginx/sites-enabled/
 sudo service nginx restart
 ```
 
-Visit `http://localhost:8000`
+Visit `http://laravel-blade-starter.local`
 
 ## Traditional Setup
 

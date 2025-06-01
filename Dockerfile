@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm
+    npm \
+    default-mysql-client
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -33,13 +34,10 @@ WORKDIR /var/www
 COPY --chown=dev:dev . .
 
 # Set storage permissions
-RUN mkdir -p storage/framework/{sessions,views,cache} && \
-    mkdir -p storage/logs && \
-    chmod -R 775 storage bootstrap/cache && \
-    chown -R dev:www-data storage bootstrap/cache
-
-# Switch to non-root user
-USER dev
+RUN mkdir -p storage/framework/{sessions,views,cache} \
+    storage/logs \
+    bootstrap/cache && \
+    chmod -R 777 storage bootstrap/cache
 
 # Install PHP dependencies
 RUN composer install --no-interaction --no-scripts
