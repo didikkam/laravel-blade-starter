@@ -7,16 +7,23 @@ A modern Laravel starter template with authentication using Blade templating eng
 ![Login Page](./public/assets/login.png)
 *Modern and responsive login interface with dark mode support*
 
+![Dashboard](./public/assets/dashboard.png)
+*Clean and intuitive dashboard layout with key metrics and navigation*
+
 ## Features
 
-- 🔐 User Authentication (Login, Register, Password Reset)
+- 🔐 User Authentication (Login)
+- 👥 Role-Based Access Control (RBAC)
+- 🛡️ Granular Permissions System
+- 🔒 Permission-Based Authorization
 - 🎨 Modern UI with Tailwind CSS
 - 📱 Fully Responsive Design
 - 🔄 AJAX Form Submissions
 - 🚀 jQuery Integration
 - 👁️ Password Toggle Visibility
-- 🌈 Social Login Ready (Google, Facebook)
 - ⚡ Smooth Animations and Transitions
+- 🗂️ Role & Permission Management
+- 🔍 Permission Caching
 
 ## Requirements
 
