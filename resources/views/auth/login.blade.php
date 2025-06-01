@@ -79,14 +79,14 @@
             <!-- Google Login -->
             <button type="button"
                 class="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
-                <i class="fab fa-google w-5 h-5 text-[#EA4335]"></i>
+                <i class="fab fa-google text-[#EA4335]"></i>
                 <span class="ml-2">Google</span>
             </button>
 
             <!-- Facebook Login -->
             <button type="button"
                 class="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
-                <i class="fab fa-facebook w-5 h-5 text-[#1877F2]"></i>
+                <i class="fab fa-facebook text-[#1877F2]"></i>
                 <span class="ml-2">Facebook</span>
             </button>
         </div>
@@ -94,14 +94,12 @@
 @endsection
 
 @section('links')
-    @if (Route::has('register'))
-        <p class="text-sm text-gray-600">
-            Don't have an account?
-            <a href="{{ route('register') }}" class="font-medium text-blue-600 hover:text-blue-500">
-                Sign up
-            </a>
-        </p>
-    @endif
+    <p class="text-sm text-gray-600">
+        Don't have an account?
+        <a href="{{ route('register') }}" class="font-medium text-blue-600 hover:text-blue-500">
+            Sign up
+        </a>
+    </p>
 @endsection
 
 @push('scripts')

@@ -19,7 +19,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
     Route::get('/password/request', [ForgotPasswordController::class, 'index'])->name('password.request');
-    Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 });
 
 // Authenticated Routes
@@ -28,12 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/show', [RegisterController::class, 'index'])->name('profile.show');
 
     // Admin Panel Routes
-    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // Content Management
-        Route::prefix('posts')->name('posts.')->middleware('auth')->group(function () {
+        Route::prefix('posts')->name('posts.')->group(function () {
             Route::get('/', [PostController::class, 'index'])->middleware('permission:admin.posts.index')->name('index');
             Route::get('/create', [PostController::class, 'create'])->middleware('permission:admin.posts.create')->name('create');
             Route::post('/', [PostController::class, 'store'])->middleware('permission:admin.posts.create')->name('store');
@@ -44,7 +43,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // User Management
-        Route::prefix('users')->name('users.')->middleware('auth')->group(function () {
+        Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->middleware('permission:admin.users.index')->name('index');
             Route::get('/create', [UserController::class, 'create'])->middleware('permission:admin.users.create')->name('create');
             Route::post('/', [UserController::class, 'store'])->middleware('permission:admin.users.create')->name('store');
@@ -54,7 +53,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{user}', [UserController::class, 'destroy'])->middleware('permission:admin.users.destroy')->name('destroy');
         });
 
-        Route::prefix('roles')->name('roles.')->middleware('auth')->group(function () {
+        Route::prefix('roles')->name('roles.')->group(function () {
             Route::get('/', [RoleController::class, 'index'])->middleware('permission:admin.roles.index')->name('index');
             Route::get('/create', [RoleController::class, 'create'])->middleware('permission:admin.roles.create')->name('create');
             Route::post('/', [RoleController::class, 'store'])->middleware('permission:admin.roles.create')->name('store');
