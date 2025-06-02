@@ -66,6 +66,16 @@ Requirements:
 - MySQL (on host)
 - Nginx (on host)
 
+Project structure for Docker:
+```
+.docker/
+├── Dockerfile            # PHP-FPM container configuration
+├── docker-entrypoint.sh # Container initialization script
+└── nginx-host.conf      # Nginx server configuration
+docker-compose.yml       # Docker services configuration
+```
+
+Setup steps:
 ```bash
 # Setup environment
 cp .env.example .env
@@ -89,12 +99,12 @@ FLUSH PRIVILEGES;"
 docker-compose up -d
 docker-compose down && docker-compose up -d --build
 
-# Run
+# Run migrations and generate key
 docker-compose exec app php artisan key:generate
 docker-compose exec app php artisan migrate
 
-# Setup Nginx (adjust the path in nginx-host.conf first)
-sudo cp nginx-host.conf /etc/nginx/sites-available/laravel-blade-starter.local
+# Setup Nginx (adjust the path in .docker/nginx-host.conf first)
+sudo cp .docker/nginx-host.conf /etc/nginx/sites-available/laravel-blade-starter.local
 sudo ln -s /etc/nginx/sites-available/laravel-blade-starter.local /etc/nginx/sites-enabled/
 sudo service nginx restart
 ```

@@ -3,12 +3,13 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: .docker/Dockerfile
     container_name: laravel_app
     restart: unless-stopped
     working_dir: /var/www
-    ports:
-      - "9000:9000"
+    networks:
+      app_network:
+        ipv4_address: 172.20.0.2
     volumes:
       - ./:/var/www
     environment:
@@ -20,3 +21,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

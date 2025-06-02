@@ -33,14 +33,13 @@ WORKDIR /var/www
 # Copy existing application directory
 COPY --chown=dev:dev . .
 
-# Set storage permissions
-RUN mkdir -p storage/framework/{sessions,views,cache} \
-    storage/logs \
-    bootstrap/cache && \
-    chmod -R 777 storage bootstrap/cache
+# Remove default html directory and create public
+RUN rm -rf /var/www/html && \
+    mkdir -p /var/www/public
 
-# Install PHP dependencies
-RUN composer install --no-interaction --no-scripts
+# Copy entrypoint script
+COPY .docker/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Install NPM dependencies
-RUN npm install 
+# Set entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"] 
