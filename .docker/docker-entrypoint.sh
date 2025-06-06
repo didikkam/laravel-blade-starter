@@ -7,17 +7,20 @@ mkdir -p storage/framework/cache
 mkdir -p storage/logs
 mkdir -p bootstrap/cache
 
+# Create log directories
+mkdir -p /var/log/supervisor
+mkdir -p /var/log/nginx
+
 # Set permissions and ownership
 chown -R www-data:www-data storage
 chown -R www-data:www-data bootstrap/cache
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
-# Install/update PHP dependencies
-composer install --no-interaction --no-scripts
+# Laravel optimizations for production
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
-# Install/update NPM dependencies
-npm install
-
-# Start PHP-FPM
-exec php-fpm 
+# Start supervisor (which will manage nginx and php-fpm)
+exec supervisord -c /etc/supervisor/conf.d/supervisord.conf 

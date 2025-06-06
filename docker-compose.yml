@@ -5,26 +5,23 @@ services:
       context: .
       dockerfile: .docker/Dockerfile
     container_name: laravel_app
-    restart: unless-stopped
-    working_dir: /var/www
-    networks:
-      app_network:
-        ipv4_address: 172.20.0.2
+    restart: always
     volumes:
-      - ./:/var/www
-    environment:
-      - DB_CONNECTION=${DB_CONNECTION}
-      - DB_HOST=host.docker.internal
-      - DB_PORT=3306
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - ./:/var/www/html
+      - composer_cache:/root/.composer/cache
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    ports:
+      - 8111:80
+    env_file:
+      - .env
+    networks:
+      - docker-app
+
+volumes:
+  composer_cache:
 
 networks:
-  app_network:
+  docker-app:
+    name: docker-app
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16

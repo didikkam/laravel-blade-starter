@@ -24,6 +24,7 @@ A modern Laravel starter template with authentication using Blade templating eng
 - ⚡ Smooth Animations and Transitions
 - 🗂️ Role & Permission Management
 - 🔍 Permission Caching
+- 🐳 Docker Ready with Nginx + PHP-FPM
 
 ## Requirements
 
@@ -48,88 +49,131 @@ A modern Laravel starter template with authentication using Blade templating eng
     php8.2-gd
   ```
 - Composer 2.x
-- Node.js >= 16.x & NPM >= 8.x
+- Node.js >= 20.x & NPM >= 10.x
 - MySQL >= 8.0 or PostgreSQL >= 13
 
-## Installation
+## Docker Setup (Recommended) 🐳
 
-1. Clone the repository
+The project includes a complete Docker setup with:
+- **Nginx** web server
+- **PHP-FPM 8.2** with all required extensions
+- **Node.js 20.x** for frontend assets
+- **Supervisor** for process management
+- **Production-ready** optimizations
+
+### Prerequisites:
+- Docker Engine & Docker Compose
+- MySQL/MariaDB running on host machine
+- Nginx running on host machine (for domain setup)
+
+### Project Structure:
+```
+.docker/
+├── Dockerfile                     # Multi-stage container with Nginx + PHP-FPM
+├── docker-entrypoint.sh          # Container initialization & Laravel optimizations
+├── supervisord.conf              # Process manager configuration
+└── nginx-host.conf               # Internal container nginx config
+
+docker-compose.yml                # Docker services configuration
+laravel-blade-starter.local.conf  # Host nginx configuration for domain
+SETUP-NGINX.md                   # Domain setup instructions
+```
+
+### Quick Start:
+
+1. **Clone and setup environment**
 ```bash
 git clone https://github.com/yourusername/laravel-blade-starter.git
 cd laravel-blade-starter
-```
-
-## Docker Setup
-
-Requirements:
-- Docker Engine
-- MySQL (on host)
-- Nginx (on host)
-
-Project structure for Docker:
-```
-.docker/
-├── Dockerfile            # PHP-FPM container configuration
-├── docker-entrypoint.sh # Container initialization script
-└── nginx-host.conf      # Nginx server configuration
-docker-compose.yml       # Docker services configuration
-```
-
-Setup steps:
-```bash
-# Setup environment
 cp .env.example .env
-
-# Update .env database connection
-DB_HOST=host.docker.internal
-DB_DATABASE=laravel_blade
-DB_USERNAME=laravel_user
-DB_PASSWORD=Secret123@
-
-# Configure MySQL to accept connections from Docker
-sudo sed -i 's/bind-address\s*=.*/bind-address = 0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf && sudo service mysql restart
-
-# Create database and user with specific privileges
-sudo mysql -e "CREATE DATABASE IF NOT EXISTS laravel_blade;
-CREATE USER IF NOT EXISTS 'laravel_user'@'%' IDENTIFIED BY 'Secret123@';
-GRANT ALL PRIVILEGES ON laravel_blade.* TO 'laravel_user'@'%';
-FLUSH PRIVILEGES;"
-
-# Start container
-docker-compose up -d
-docker-compose down && docker-compose up -d --build
-
-# Run migrations and generate key
-docker-compose exec app php artisan key:generate
-docker-compose exec app php artisan migrate
-
-# Setup Nginx (adjust the path in .docker/nginx-host.conf first)
-sudo cp .docker/nginx-host.conf /etc/nginx/sites-available/laravel-blade-starter.local
-sudo ln -s /etc/nginx/sites-available/laravel-blade-starter.local /etc/nginx/sites-enabled/
-sudo service nginx restart
 ```
 
-Visit `http://laravel-blade-starter.local`
+2. **Configure database connection in .env**
+```env
+DB_CONNECTION=mysql
+DB_HOST=host.docker.internal
+DB_PORT=3306
+DB_DATABASE=laravel_blade
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+3. **Start Docker container**
+```bash
+# Build and start container (includes composer install & npm build)
+docker-compose up --build
+
+# Container will be available at http://localhost:8111
+```
+
+4. **Setup database and generate key**
+```bash
+# Generate application key
+docker-compose exec app php artisan key:generate
+
+# Run migrations
+docker-compose exec app php artisan migrate
+```
+
+5. **Setup custom domain (optional)**
+```bash
+# Copy nginx configuration
+sudo cp laravel-blade-starter.local.conf /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/laravel-blade-starter.local.conf /etc/nginx/sites-enabled/
+
+# Add domain to hosts file
+echo "127.0.0.1    laravel-blade-starter.local" | sudo tee -a /etc/hosts
+
+# Test and restart nginx
+sudo nginx -t && sudo systemctl restart nginx
+```
+
+### Access Points:
+- **Direct Docker**: `http://localhost:8111`
+- **Custom Domain**: `http://laravel-blade-starter.local` (after domain setup)
+
+### Docker Features:
+- ✅ **Automatic dependency installation** (Composer + NPM)
+- ✅ **Frontend asset building** (Vite build)
+- ✅ **Laravel optimizations** (config, route, view caching)
+- ✅ **Production-ready** configuration
+- ✅ **Hot database connection** to host
+- ✅ **Supervisor process management**
+- ✅ **Security headers** and optimizations
+
+### Development Commands:
+```bash
+# View container logs
+docker-compose logs -f
+
+# Execute commands in container
+docker-compose exec app php artisan migrate
+docker-compose exec app php artisan make:controller YourController
+
+# Rebuild container
+docker-compose down && docker-compose up --build
+
+# Stop container
+docker-compose down
+```
 
 ## Traditional Setup
 
-2. Install PHP dependencies
+### Installation Steps:
+
+1. **Install dependencies**
 ```bash
 composer install
-```
-
-3. Install NPM dependencies
-```bash
 npm install
 ```
 
-4. Create and configure .env file
+2. **Environment setup**
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-5. Configure your database in .env file
+3. **Database configuration**
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -139,38 +183,32 @@ DB_USERNAME=your_database_user
 DB_PASSWORD=your_database_password
 ```
 
-6. Set proper folder permissions (for Linux/Unix systems)
+4. **Set permissions (Linux/Unix)**
 ```bash
-# Set proper ownership for storage and bootstrap/cache directories
-sudo chown -R 33:33 storage bootstrap/cache
-# Or if you're using different user:group
 sudo chown -R www-data:www-data storage bootstrap/cache
-
-# Set directory permissions
 chmod -R 775 storage bootstrap/cache
 ```
 
-7. Run database migrations
+5. **Database setup**
 ```bash
 php artisan migrate
 ```
 
-8. Build assets
+6. **Build assets**
 ```bash
 npm run dev
 ```
 
-9. Start the development server
+7. **Start development server**
 ```bash
 php artisan serve
 ```
 
-Visit `http://localhost:8000` in your browser.
+Visit `http://localhost:8000`
 
 ## Development
 
-For development with hot-reload:
-
+### For development with hot-reload:
 ```bash
 # Terminal 1: Laravel Server
 php artisan serve
@@ -179,16 +217,60 @@ php artisan serve
 npm run dev
 ```
 
+### With Docker:
+```bash
+# Development mode (no asset building)
+docker-compose exec app npm run dev
+
+# Watch for changes
+docker-compose exec app npm run build
+```
+
 ## Production Deployment
 
-For production deployment:
-
+### Traditional:
 ```bash
 npm run build
 php artisan optimize
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+```
+
+### Docker:
+The Docker container is already production-optimized with:
+- Composer install `--no-dev --optimize-autoloader`
+- NPM build for production
+- Laravel caching enabled
+- Nginx + PHP-FPM for high performance
+
+## Troubleshooting
+
+### Docker Issues:
+```bash
+# Check container status
+docker-compose ps
+
+# View logs
+docker-compose logs app
+
+# Restart services
+docker-compose restart
+
+# Rebuild from scratch
+docker-compose down -v && docker-compose up --build
+```
+
+### Domain Issues:
+```bash
+# Test nginx configuration
+sudo nginx -t
+
+# Check domain resolution
+nslookup laravel-blade-starter.local
+
+# View nginx logs
+sudo tail -f /var/log/nginx/laravel-blade-starter.error.log
 ```
 
 ## Security
