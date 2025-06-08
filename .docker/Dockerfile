@@ -45,28 +45,29 @@ WORKDIR /var/www/html
 # Copy composer files first for better caching
 COPY --chown=dev:dev composer.json composer.lock* ./
 
+# Copy package files for npm
+COPY --chown=dev:dev package*.json ./
+
+# Copy existing application directory FIRST
+COPY --chown=dev:dev . .
+
 # Install PHP dependencies with speed optimizations
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install \
-    --prefer-dist \
     --no-scripts \
     --no-dev \
     --optimize-autoloader \
-    --no-interaction \
     --ignore-platform-reqs
-
-# Copy package files for npm
-COPY --chown=dev:dev package*.json ./
 
 # Clean install npm dependencies to fix corruption
 RUN npm cache clean --force \
     && npm install --legacy-peer-deps \
     && npm ls || true
 
-# Copy existing application directory
-COPY --chown=dev:dev . .
-
 # Build frontend assets with error handling
 RUN npm run build || echo "Build failed, continuing without frontend assets"
+
+# Run post-install scripts after everything is copied
+RUN composer dump-autoload --optimize
 
 # Copy nginx configuration
 COPY .docker/nginx.conf /etc/nginx/nginx.conf

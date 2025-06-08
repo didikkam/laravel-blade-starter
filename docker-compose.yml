@@ -6,12 +6,18 @@ services:
       context: .
       dockerfile: .docker/Dockerfile
     restart: always
+    network_mode: bridge
     ports:
       - "8101:80"
     volumes:
       - ./:/var/www/html
-      - /var/www/html/vendor
+      - vendor_data:/var/www/html/vendor
+      - node_modules_data:/var/www/html/node_modules
     extra_hosts:
       - "host.docker.internal:host-gateway"
     # env_file:
     #   - .env
+
+volumes:
+  vendor_data:
+  node_modules_data:

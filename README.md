@@ -146,6 +146,9 @@ sudo nginx -t && sudo systemctl restart nginx
 docker-compose logs -f
 
 # Execute commands in container
+docker-compose exec app composer update
+docker-compose exec app npm update
+docker-compose exec app npm run build
 docker-compose exec app php artisan migrate
 docker-compose exec app php artisan make:controller YourController
 
