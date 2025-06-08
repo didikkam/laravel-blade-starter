@@ -116,11 +116,11 @@ docker-compose exec app php artisan migrate
 5. **Setup nginx configuration**
 ```bash
 # Copy nginx configuration
-sudo cp laravel-blade-starter.local.conf /etc/nginx/sites-available/
+sudo cp .docker/laravel-blade-starter.local.conf /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/laravel-blade-starter.local.conf /etc/nginx/sites-enabled/
 
 # Add domain to hosts file
-echo "127.0.0.1    laravel-blade-starter.local" | sudo tee -a /etc/hosts
+echo "127.0.0.1    .docker/laravel-blade-starter.local" | sudo tee -a /etc/hosts
 
 # Test and restart nginx
 sudo nginx -t && sudo systemctl restart nginx
@@ -150,7 +150,7 @@ docker-compose exec app php artisan migrate
 docker-compose exec app php artisan make:controller YourController
 
 # Rebuild container
-docker-compose down && docker-compose up --build
+docker-compose down && docker-compose up -d --build
 
 # Stop container
 docker-compose down

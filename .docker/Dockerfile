@@ -9,8 +9,8 @@ COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
-# Install essential dependencies for PHP extensions
-RUN apk add --no-cache curl zip unzip bash \
+# Install essential dependencies for PHP extensions and nginx
+RUN apk add --no-cache curl zip unzip bash nginx supervisor \
     oniguruma-dev libxml2-dev mysql-client
 RUN node --version && npm --version
 
@@ -34,6 +34,10 @@ RUN adduser -D dev
 RUN addgroup dev www-data
 RUN mkdir -p /home/dev/.composer
 RUN chown -R dev:dev /home/dev
+
+# Create nginx directories and set permissions
+RUN mkdir -p /var/log/nginx /var/lib/nginx/tmp /run/nginx \
+    && chown -R nginx:nginx /var/log/nginx /var/lib/nginx /run/nginx
 
 # Set working directory
 WORKDIR /var/www/html
@@ -64,8 +68,12 @@ COPY --chown=dev:dev . .
 # Build frontend assets with error handling
 RUN npm run build || echo "Build failed, continuing without frontend assets"
 
-# Remove node_modules to reduce image size
-RUN rm -rf node_modules
+# Copy nginx configuration
+COPY .docker/nginx.conf /etc/nginx/nginx.conf
+COPY .docker/laravel.conf /etc/nginx/conf.d/default.conf
+
+# Copy supervisor configuration
+COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy entrypoint script with proper permissions
 COPY .docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
@@ -75,8 +83,8 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
 # Set ownership (user already created above)
 RUN chown -R dev:dev /var/www/html
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Expose port 80 for nginx
+EXPOSE 80
 
 # Set entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"] 
