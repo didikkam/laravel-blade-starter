@@ -24,7 +24,7 @@ A modern Laravel starter template with authentication using Blade templating eng
 - ⚡ Smooth Animations and Transitions
 - 🗂️ Role & Permission Management
 - 🔍 Permission Caching
-- 🐳 Docker Ready with Nginx + PHP-FPM
+- 🐳 Docker Ready with Host Nginx + Container PHP-FPM
 
 ## Requirements
 
@@ -55,27 +55,25 @@ A modern Laravel starter template with authentication using Blade templating eng
 ## Docker Setup (Recommended) 🐳
 
 The project includes a complete Docker setup with:
-- **Nginx** web server
-- **PHP-FPM 8.2** with all required extensions
+- **Host Nginx** web server
+- **Container PHP-FPM 8.2** with all required extensions
 - **Node.js 20.x** for frontend assets
-- **Supervisor** for process management
+- **Static IP** configuration for direct FastCGI communication
 - **Production-ready** optimizations
 
 ### Prerequisites:
 - Docker Engine & Docker Compose
 - MySQL/MariaDB running on host machine
-- Nginx running on host machine (for domain setup)
+- Nginx running on host machine
 
 ### Project Structure:
 ```
 .docker/
-├── Dockerfile                     # Multi-stage container with Nginx + PHP-FPM
-├── docker-entrypoint.sh          # Container initialization & Laravel optimizations
-├── supervisord.conf              # Process manager configuration
-└── nginx-host.conf               # Internal container nginx config
+├── Dockerfile                     # PHP-FPM container only
+└── docker-entrypoint.sh          # Container initialization & Laravel optimizations
 
-docker-compose.yml                # Docker services configuration
-laravel-blade-starter.local.conf  # Host nginx configuration for domain
+docker-compose.yml                # Docker services with static IP
+laravel-blade-starter.local.conf  # Host nginx configuration for FastCGI
 SETUP-NGINX.md                   # Domain setup instructions
 ```
 
@@ -103,7 +101,7 @@ DB_PASSWORD=your_password
 # Build and start container (includes composer install & npm build)
 docker-compose up --build
 
-# Container will be available at http://localhost:8111
+# Container will be available at IP 172.20.0.10
 ```
 
 4. **Setup database and generate key**
@@ -115,7 +113,7 @@ docker-compose exec app php artisan key:generate
 docker-compose exec app php artisan migrate
 ```
 
-5. **Setup custom domain (optional)**
+5. **Setup nginx configuration**
 ```bash
 # Copy nginx configuration
 sudo cp laravel-blade-starter.local.conf /etc/nginx/sites-available/
@@ -129,17 +127,18 @@ sudo nginx -t && sudo systemctl restart nginx
 ```
 
 ### Access Points:
-- **Direct Docker**: `http://localhost:8111`
-- **Custom Domain**: `http://laravel-blade-starter.local` (after domain setup)
+- **Custom Domain**: `http://laravel-blade-starter.local`
+- **Container IP**: `172.20.0.10` (for debugging only)
 
 ### Docker Features:
+- ✅ **Host Nginx** with FastCGI to container PHP-FPM
+- ✅ **Static IP** (172.20.0.10) for reliable connection
+- ✅ **No port forwarding** - direct network communication
 - ✅ **Automatic dependency installation** (Composer + NPM)
 - ✅ **Frontend asset building** (Vite build)
 - ✅ **Laravel optimizations** (config, route, view caching)
 - ✅ **Production-ready** configuration
 - ✅ **Hot database connection** to host
-- ✅ **Supervisor process management**
-- ✅ **Security headers** and optimizations
 
 ### Development Commands:
 ```bash
@@ -155,6 +154,10 @@ docker-compose down && docker-compose up --build
 
 # Stop container
 docker-compose down
+
+# Debug network
+docker network inspect docker-app
+ping 172.20.0.10
 ```
 
 ## Traditional Setup
@@ -242,7 +245,7 @@ The Docker container is already production-optimized with:
 - Composer install `--no-dev --optimize-autoloader`
 - NPM build for production
 - Laravel caching enabled
-- Nginx + PHP-FPM for high performance
+- Host Nginx + Container PHP-FPM for high performance
 
 ## Troubleshooting
 
@@ -254,11 +257,15 @@ docker-compose ps
 # View logs
 docker-compose logs app
 
-# Restart services
-docker-compose restart
+# Check container IP
+docker inspect laravel_app | grep IPAddress
 
-# Rebuild from scratch
-docker-compose down -v && docker-compose up --build
+# Test PHP-FPM
+docker-compose exec app php-fpm -t
+
+# Test network connectivity
+ping 172.20.0.10
+telnet 172.20.0.10 9000
 ```
 
 ### Domain Issues:
@@ -271,6 +278,10 @@ nslookup laravel-blade-starter.local
 
 # View nginx logs
 sudo tail -f /var/log/nginx/laravel-blade-starter.error.log
+
+# Check network
+docker network ls
+docker network inspect docker-app
 ```
 
 ## Security

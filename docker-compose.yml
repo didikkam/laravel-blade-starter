@@ -8,20 +8,29 @@ services:
     restart: always
     volumes:
       - ./:/var/www/html
-      - composer_cache:/root/.composer/cache
+      # Exclude volumes to prevent mounting unwanted files
+      - /var/www/html/node_modules
+      - /var/www/html/vendor
+      - /var/www/html/.git
+      - /var/www/html/.docker
+      - /var/www/html/storage/logs
+      - /var/www/html/storage/framework/cache
+      - /var/www/html/storage/framework/sessions
+      - /var/www/html/storage/framework/views
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    ports:
-      - 8111:80
     env_file:
       - .env
     networks:
-      - docker-app
-
-volumes:
-  composer_cache:
+      docker-app:
+        ipv4_address: 172.20.0.10
 
 networks:
   docker-app:
     name: docker-app
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
